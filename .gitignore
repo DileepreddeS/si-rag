@@ -1,0 +1,14 @@
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+data/indexes/
+data/failure_log.jsonl
+.cache/
+.env
+*.key
+.DS_Store
+Thumbs.db
+.vscode/
+*.egg-info/

@@ -1,0 +1,70 @@
+import json
+from pathlib import Path
+
+SAMPLE_DOCS = [
+    {"id": "1",  "source": "wiki", "text": "Retrieval-Augmented Generation (RAG) grounds language model outputs in external knowledge retrieved at inference time, reducing hallucination."},
+    {"id": "2",  "source": "wiki", "text": "FAISS (Facebook AI Similarity Search) is a library for efficient similarity search and clustering of dense vectors, developed by Meta AI Research."},
+    {"id": "3",  "source": "wiki", "text": "BM25 is a bag-of-words retrieval function that ranks documents based on query terms appearing in each document using term frequency and inverse document frequency."},
+    {"id": "4",  "source": "wiki", "text": "Hallucination in large language models refers to the generation of content that is factually incorrect or not grounded in the provided context."},
+    {"id": "5",  "source": "wiki", "text": "Chain-of-thought prompting encourages language models to generate intermediate reasoning steps before producing a final answer, improving accuracy on complex tasks."},
+    {"id": "6",  "source": "wiki", "text": "Natural Language Inference (NLI) is the task of determining whether a hypothesis is entailed by, contradicted by, or neutral with respect to a given premise."},
+    {"id": "7",  "source": "wiki", "text": "Cross-encoders jointly encode a query-document pair to produce a relevance score, yielding higher accuracy than bi-encoders but at greater computational cost."},
+    {"id": "8",  "source": "wiki", "text": "Reciprocal Rank Fusion (RRF) combines ranked lists from multiple retrieval systems by assigning scores based on inverse rank position of each document."},
+    {"id": "9",  "source": "wiki", "text": "Qwen is a series of large language models developed by Alibaba Cloud, available in multiple sizes and capable of instruction following and reasoning."},
+    {"id": "10", "source": "wiki", "text": "Ollama is a tool that allows users to run large language models locally on their own hardware with a simple command-line interface."},
+    {"id": "11", "source": "wiki", "text": "Sentence transformers produce meaningful sentence embeddings for semantic similarity tasks by fine-tuning transformer models on sentence pairs."},
+    {"id": "12", "source": "wiki", "text": "RAGAS is an evaluation framework for Retrieval-Augmented Generation systems measuring faithfulness, answer relevancy, context precision, and context recall."},
+    {"id": "13", "source": "wiki", "text": "DeBERTa improves BERT using disentangled attention and an enhanced mask decoder, achieving strong performance on NLI and other NLP benchmarks."},
+    {"id": "14", "source": "wiki", "text": "Adaptive RAG systems dynamically adjust retrieval strategy based on query complexity, using simpler strategies for easy queries and multi-step retrieval for hard ones."},
+    {"id": "15", "source": "wiki", "text": "Self-RAG trains language models to generate reflection tokens that control when and how to retrieve, allowing the model to critique its own outputs."},
+    {"id": "16", "source": "wiki", "text": "The Monsoon HPC cluster at Northern Arizona University provides A100 GPU resources for large-scale machine learning research and experimentation."},
+    {"id": "17", "source": "wiki", "text": "Prompt engineering involves crafting input prompts to guide language model behavior without updating model weights, using in-context learning techniques."},
+    {"id": "18", "source": "wiki", "text": "Vector databases store high-dimensional embeddings and support efficient approximate nearest-neighbor search, enabling semantic retrieval at scale."},
+    {"id": "19", "source": "wiki", "text": "LoRA (Low-Rank Adaptation) is a parameter-efficient fine-tuning technique that adds trainable low-rank matrices to frozen pre-trained model weights."},
+    {"id": "20", "source": "wiki", "text": "Quantization reduces model size and inference cost by representing weights with lower precision such as INT8 or INT4 instead of FP32."},
+    {"id": "21", "source": "wiki", "text": "TriviaQA is a reading comprehension dataset containing trivia questions paired with evidence documents from Wikipedia and the web."},
+    {"id": "22", "source": "wiki", "text": "Natural Questions is a dataset of questions issued to the Google search engine paired with Wikipedia articles containing the answers."},
+    {"id": "23", "source": "wiki", "text": "Faithfulness in RAG evaluation measures whether the generated answer is factually consistent with the retrieved context provided to the model."},
+    {"id": "24", "source": "wiki", "text": "TruLens is an evaluation library for LLM applications that provides feedback functions to measure hallucination rate, relevance, and groundedness."},
+    {"id": "25", "source": "wiki", "text": "Ablation studies systematically remove components from a model to measure the individual contribution of each part to overall system performance."},
+    {"id": "26", "source": "wiki", "text": "HotpotQA is a question answering dataset requiring multi-hop reasoning across multiple documents to arrive at the correct answer."},
+    {"id": "27", "source": "wiki", "text": "The attention mechanism in transformers computes a weighted sum of value vectors where weights are determined by compatibility between queries and keys."},
+    {"id": "28", "source": "wiki", "text": "PyTorch is an open-source machine learning framework developed by Meta AI, widely used for deep learning research and production deployments."},
+    {"id": "29", "source": "wiki", "text": "Cosine similarity measures the cosine of the angle between two vectors and is commonly used to compare document embeddings in information retrieval."},
+    {"id": "30", "source": "wiki", "text": "Confidence calibration ensures that a model's predicted confidence scores accurately reflect the true probability of the answer being correct."},
+    {"id": "31", "source": "wiki", "text": "IEEE Access is a multidisciplinary open-access journal publishing peer-reviewed research across all IEEE fields of interest with rapid publication times."},
+    {"id": "32", "source": "wiki", "text": "Knowledge distillation is a compression technique where a smaller student model is trained to mimic the behavior of a larger teacher model."},
+    {"id": "33", "source": "wiki", "text": "Perplexity measures how well a probability model predicts a sample. Lower perplexity means the model is more confident in its predictions."},
+    {"id": "34", "source": "wiki", "text": "Agentic AI systems use language models as reasoning engines that can plan multi-step actions, use tools, and adapt based on environmental feedback."},
+    {"id": "35", "source": "wiki", "text": "Grounding in AI connects model outputs to real-world facts or external documents rather than relying solely on the model's parametric memory."},
+    {"id": "36", "source": "wiki", "text": "The BEIR benchmark is a heterogeneous retrieval benchmark covering 18 diverse datasets for evaluating zero-shot information retrieval models."},
+    {"id": "37", "source": "wiki", "text": "Sparse retrieval methods like BM25 rely on exact lexical matching and are fast, interpretable, and effective for keyword-heavy queries."},
+    {"id": "38", "source": "wiki", "text": "Dense retrieval uses neural encoders to represent queries and documents as vectors, enabling semantic matching beyond simple keyword overlap."},
+    {"id": "39", "source": "wiki", "text": "Multi-hop reasoning requires synthesizing information from multiple documents or performing multiple reasoning steps to answer a single question."},
+    {"id": "40", "source": "wiki", "text": "Open-domain question answering requires answering questions without a predefined candidate set, needing broad retrieval over large document corpora."},
+    {"id": "41", "source": "wiki", "text": "LangChain is a framework for building applications with large language models, providing tools for chaining prompts, memory management, and agents."},
+    {"id": "42", "source": "wiki", "text": "Embeddings are dense vector representations of text that capture semantic meaning and enable mathematical operations on natural language."},
+    {"id": "43", "source": "wiki", "text": "SLURM is a workload manager used by HPC clusters to schedule and manage computational jobs across multiple nodes and GPU resources."},
+    {"id": "44", "source": "wiki", "text": "Hugging Face is a platform providing open-source NLP tools, model hosting, and datasets widely used by the machine learning research community."},
+    {"id": "45", "source": "wiki", "text": "Transformer models use self-attention mechanisms to process sequences of data. BERT, GPT, and T5 are all well-known transformer-based architectures."},
+    {"id": "46", "source": "wiki", "text": "Few-shot learning allows models to generalize from a small number of examples provided in the prompt context without any gradient updates."},
+    {"id": "47", "source": "wiki", "text": "Named Entity Recognition is the task of locating and classifying named entities in text into categories such as person, organization, or location."},
+    {"id": "48", "source": "wiki", "text": "Machine learning is a subset of artificial intelligence that gives systems the ability to learn and improve from experience without being explicitly programmed."},
+    {"id": "49", "source": "wiki", "text": "The Python programming language emphasizes code readability and simplicity and has become the dominant language for machine learning and data science."},
+    {"id": "50", "source": "wiki", "text": "Retrieval systems combine dense and sparse approaches using score fusion techniques like Reciprocal Rank Fusion to leverage the strengths of both methods."},
+]
+
+
+def main() -> None:
+    out_path = Path("data/raw/corpus.jsonl")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        for doc in SAMPLE_DOCS:
+            f.write(json.dumps(doc) + "\n")
+
+    print(f"[CREATE] Corpus written -> {out_path} ({len(SAMPLE_DOCS)} docs)")
+
+
+if __name__ == "__main__":
+    main()
