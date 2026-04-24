@@ -1,0 +1,50 @@
+{
+  "default": [
+    {
+      "role": "user",
+      "content": "string"
+    },
+    {
+      "role": "assistant",
+      "content": "LangChain is a framework for building applications with large language models, providing tools for chaining prompts, memory management, and agents. [1]"
+    }
+  ],
+  "test123": [
+    {
+      "role": "user",
+      "content": "What is retrieval augmented generation?"
+    },
+    {
+      "role": "assistant",
+      "content": "Retrieval-Augmented Generation (RAG) grounds language model outputs in external knowledge retrieved at inference time, reducing hallucination [1]. This approach integrates retrieval techniques with generative models to enhance the accuracy and relevance of generated responses by leveraging external information when needed."
+    }
+  ],
+  "session_bizrhtl": [
+    {
+      "role": "user",
+      "content": "what is dileep email address?"
+    },
+    {
+      "role": "assistant",
+      "content": "Dileep Kumar Salla's email address is dileepkumarsalla9@gmail.com [1]. This document provides his contact information but does not offer an explanation or overview of the email address beyond its identification as part of his professional details."
+    }
+  ],
+  "session_3p0jz03": [
+    {
+      "role": "user",
+      "content": "what is dileep email address ?"
+    },
+    {
+      "role": "assistant",
+      "content": "Dileep Kumar Salla's email address is dileepkumarsalla9@gmail.com [1]. This provides a means for contacting him directly, as indicated in his professional summary where it is listed alongside other contact details such as phone number and LinkedIn profile."
+    },
+    {
+      "role": "user",
+      "content": "what is dileep email address?"
+    },
+    {
+      "role": "assistant",
+      "content": "Dileep Kumar Salla's email address is defined as dileepkumarsalla9@gmail.com [1]. This electronic mail identifier serves as a digital communication channel for contacting Dileep directly, complementing other contact details such as his phone number and LinkedIn profile provided in the summary."
+    }
+  ]
+}
